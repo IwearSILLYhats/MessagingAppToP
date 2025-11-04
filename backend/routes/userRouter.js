@@ -1,6 +1,6 @@
-import express from "express";
+const express = require("express");
 const userRouter = express.Router();
-import { PrismaClient } from "../prisma";
+const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 
-export default userRouter;
+module.exports = userRouter;

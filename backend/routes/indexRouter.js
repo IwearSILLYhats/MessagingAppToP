@@ -1,11 +1,11 @@
-import express from "express";
-import chatRouter from "./chatRouter";
-import messageRouter from "./messageRouter";
-import userRouter from "./userRouter";
+const express = require("express");
+const chatRouter = require("./chatRouter");
+const messageRouter = require("./messageRouter");
+const userRouter = require("./userRouter");
 const index = express.Router();
-import { PrismaClient } from "../generated/prisma";
+const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
-import bcrypt from "bcryptjs";
+const bcrypt = require("bcryptjs");
 
 index.get("/", async (req, res) => {
   let response;
@@ -40,14 +40,9 @@ index.post("/login", async (req, res) => {
     //TODO - verify via email and password, pass JWT to frontend
   } catch (error) {}
 });
-index.get("/logout", async (req, res) => {
-  try {
-    //TODO - remove user from session table
-  } catch (error) {}
-});
 
 index.use("/chat", chatRouter);
 index.use("/message", messageRouter);
 index.use("/user", userRouter);
 
-export default index;
+module.exports = index;

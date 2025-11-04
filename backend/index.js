@@ -1,15 +1,13 @@
-import express from "express";
-import path from "node:path";
-import cors from "cors";
-import dotenv from "dotenv";
+const express = require("express");
+const path = require("node:path");
+const cors = require("cors");
+const dotenv = require("dotenv");
 dotenv.config();
-import { PrismaClient } from "./generated/prisma";
-import expressSession from "express-session";
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import { PrismaSessionStone } from "@quixo3/prisma-session-store";
+const { PrismaClient } = require("./generated/prisma");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 const prisma = new PrismaClient();
-import index from "./routes/indexRouter";
+const index = require("./routes/indexRouter");
 
 const app = express();
 
@@ -25,7 +23,21 @@ passport.use(
             email: username,
           },
         });
-      } catch (error) {}
+        if (!user) {
+          return done(null, false, {
+            message: "Incorrect email",
+          });
+        }
+        if (user.password !== password) {
+          return done(null, false, {
+            message: "Incorrect password",
+          });
+        }
+        return done(null, user);
+      } catch (error) {
+        console.log(error);
+        return done(err);
+      }
     }
   )
 );
@@ -34,29 +46,13 @@ app.use(
   cors({
     origin: process.env.FRONTEND,
     methods: "GET,PUT,POST,DELETE",
-    credentials: TRUE,
+    credentials: true,
     optionsSuccessStatus: 204,
   })
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
-app.use(
-  expressSession({
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // ms
-    },
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: new PrismaSessionStone(new PrismaClient(), {
-      checkPeriod: 2 * 60 * 1000, // ms
-      dbRecordIdIsSessionId: true,
-      dbRecordIdFunction: undefined,
-    }),
-  })
-);
-
 app.use("/", index);
 
 app.listen(process.env.PORT, () => {
