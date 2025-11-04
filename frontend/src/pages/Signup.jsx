@@ -51,6 +51,7 @@ export default function Signup() {
           id="email"
           placeholder="fakename@example.com"
           required
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="text"
@@ -58,6 +59,7 @@ export default function Signup() {
           id="username"
           placeholder="Steve"
           required
+          onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
@@ -65,6 +67,7 @@ export default function Signup() {
           id="password"
           placeholder="*******"
           required
+          onChange={(e) => setPassword(e.target.value)}
         />
         <input
           type="password"
@@ -72,8 +75,11 @@ export default function Signup() {
           id="confirm"
           placeholder="*******"
           required
+          onChange={(e) => setConfirm(e.target.value)}
         />
-        {(error || success) && <Alert type={error || success} />}
+        {(error || success) && (
+          <Alert type={error || success} message={error || success} />
+        )}
         <button type="submit" disabled={submitted}>
           Signup
         </button>

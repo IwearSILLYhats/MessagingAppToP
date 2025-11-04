@@ -8,15 +8,15 @@ import "./App.css";
 
 function App() {
   const navigate = useNavigate();
-  const [login, setLogin] = useLocalStorage("login", null);
+  const [token, setToken] = useLocalStorage("token", null);
 
   useEffect(() => {
-    if (!login || login === null) navigate("/login", { replace: true });
-  }, [login]);
+    if (!token || token === null) navigate("/token", { replace: true });
+  }, [token]);
 
   return (
     <>
-      {login && (
+      {token && (
         <div>
           <Conversations />
           <Chat />

@@ -16,7 +16,7 @@ datasource db {
 
 model User {
   id              String      @id @default(uuid())
-  email           String
+  email           String      @unique
   username        String
   password        String
   profile_img_url String?
@@ -28,8 +28,7 @@ model User {
   friends  Friendship[] @relation("UserFriends")
   // Represents friendships where this user is the 'recipient'
   friendOf Friendship[] @relation("FriendOfUser")
-  Chat     Chat?        @relation(fields: [chatId], references: [id])
-  chatId   String?
+  Chat     Chat[]
   Message  Message[]
 }
 
@@ -62,8 +61,8 @@ model Message {
   content     String
   posted_date DateTime @default(now())
   image_url   String?
-  Chat        Chat?    @relation(fields: [chatId], references: [id])
-  chatId      String?
+  Chat        Chat     @relation(fields: [chatId], references: [id])
+  chatId      String
 }
 
 enum friend_status {
@@ -80,11 +79,4 @@ enum acct_status {
 enum chat_type {
   DIRECT
   GROUP
-}
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
-  expiresAt DateTime
 }
