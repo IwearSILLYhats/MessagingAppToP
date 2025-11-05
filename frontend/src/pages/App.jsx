@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Chat from "../components/Chat";
 import Conversations from "../components/Conversations";
 import FriendList from "../components/FriendList";
@@ -9,6 +9,9 @@ import "./App.css";
 function App() {
   const navigate = useNavigate();
   const [token, setToken] = useLocalStorage("token", null);
+  const [friends, setFriends] = useState(null);
+  const [chat, setChat] = useState(null);
+  const [conversation, setConversation] = useState(null);
 
   useEffect(() => {
     if (!token || token === null) navigate("/token", { replace: true });
@@ -17,11 +20,11 @@ function App() {
   return (
     <>
       {token && (
-        <div>
+        <>
           <Conversations />
           <Chat />
           <FriendList />
-        </div>
+        </>
       )}
     </>
   );

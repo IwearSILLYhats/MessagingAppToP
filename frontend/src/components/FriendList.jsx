@@ -1,13 +1,13 @@
-export default function FriendList() {
+export default function FriendList({ friends }) {
   function drawerToggle() {}
   function addFriend() {}
   return (
-    <section className="friendlist">
+    <section className="friends">
       <button onClick={() => drawerToggle()}>|||</button>
       <button onClick={() => addFriend()}>Add Friend</button>
       <ul>
         {/* Friends List */}
-        <li></li>
+        {!friends && <h3>You have no friends!</h3>}
       </ul>
     </section>
   );

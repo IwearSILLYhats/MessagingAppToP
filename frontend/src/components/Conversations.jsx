@@ -1,6 +1,6 @@
 import ChatCard from "./ChatCard";
 
-export default function Conversations() {
+export default function Conversations({ conversations }) {
   function drawerToggle() {}
   function newChat() {}
   function toggleChat() {}
@@ -11,8 +11,8 @@ export default function Conversations() {
       <button onClick={() => newChat()}>New Chat</button>
       <button onClick={() => toggleChat()}>Group/DM Toggle</button>
       <ul>
-        {/* Chat List */}
-        <ChatCard openChat={openChat} />
+        {!conversations && <h3>You don't have any conversations!</h3>}
+        {conversations && <ChatCard openChat={openChat} />}
       </ul>
     </section>
   );
