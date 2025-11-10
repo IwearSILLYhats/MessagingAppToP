@@ -7,13 +7,37 @@ const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const protectedRoute = require("../auth/auth");
 
-index.get("/", async (req, res) => {
+index.get("/", protectedRoute, async (req, res) => {
   let response;
   try {
-    //TODO - fetch friends list and chat list
-    const [friends, chats] = await Promise.all([user, chat]);
-  } catch (error) {}
+    //fetch friends list and chat list
+    const userData = await prisma.user.findUnique({
+      where: {
+        id: parseInt(req.user.id),
+      },
+      include: {
+        Chat: true,
+        friends: {
+          omit: {
+            password: true,
+            email: true,
+          },
+        },
+        friendOf: {
+          omit: {
+            password: true,
+            email: true,
+          },
+        },
+      },
+    });
+    return res.json(userData);
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
+  }
 });
 index.post("/signup", async (req, res) => {
   try {

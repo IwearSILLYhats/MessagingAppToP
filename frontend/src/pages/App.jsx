@@ -11,7 +11,7 @@ function App() {
   const [token, setToken] = useLocalStorage("token", null);
   const [friends, setFriends] = useState(null);
   const [chat, setChat] = useState(null);
-  const [conversation, setConversation] = useState(null);
+  const [conversations, setConversations] = useState(null);
 
   useEffect(() => {
     if (!token || token === null) navigate("/token", { replace: true });

@@ -1,4 +1,6 @@
-export default function FriendList({ friends }) {
+import UserUI from "./UserUI";
+
+export default function FriendList({ friends, user }) {
   function drawerToggle() {}
   function addFriend() {}
   return (
@@ -9,6 +11,7 @@ export default function FriendList({ friends }) {
         {/* Friends List */}
         {!friends && <h3>You have no friends!</h3>}
       </ul>
+      <UserUI user={user} />
     </section>
   );
 }
