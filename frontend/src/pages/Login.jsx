@@ -30,7 +30,7 @@ export default function Login() {
       setError(request.error);
     } else {
       setSuccess(request.success);
-      setToken(request.token);
+      setToken(`Bearer ${request.token}`);
       setTimeout(() => {
         navigate("/");
       }, 3000);

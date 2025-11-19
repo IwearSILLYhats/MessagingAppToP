@@ -21,7 +21,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.json());
 app.use("/", index);
-
+app.use((err, req, res, next) => {
+  console.log(err);
+  return res.status(500).send("Something broke!");
+});
 app.listen(process.env.PORT, () => {
   console.log(`Listening on PORT ${process.env.PORT}`);
 });

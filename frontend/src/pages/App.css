@@ -15,3 +15,7 @@
   border: 1px solid white;
   flex-grow: 1;
 }
+.profileImg {
+  max-width: 1rem;
+  max-height: 1rem;
+}

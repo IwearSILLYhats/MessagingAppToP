@@ -12,18 +12,29 @@ function App() {
   const [friends, setFriends] = useState(null);
   const [chat, setChat] = useState(null);
   const [conversations, setConversations] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (!token || token === null) navigate("/token", { replace: true });
+    // fetch dashboard data (conversations and friends)
+    if (!token || token === null) navigate("/login", { replace: true });
+    async function fetchDashboard() {
+      const request = await fetch(`${import.meta.env.VITE_API_URL}/`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      const response = await request.text();
+    }
+    fetchDashboard();
   }, [token]);
 
   return (
     <>
       {token && (
         <>
-          <Conversations />
-          <Chat />
-          <FriendList />
+          <Conversations conversations={conversations} setChat={setChat} />
+          <Chat chat={chat} />
+          <FriendList user={user} friends={friends} logout={setToken} />
         </>
       )}
     </>

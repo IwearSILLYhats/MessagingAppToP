@@ -10,25 +10,40 @@ const jwt = require("jsonwebtoken");
 const protectedRoute = require("../auth/auth");
 
 index.get("/", protectedRoute, async (req, res) => {
-  let response;
   try {
     //fetch friends list and chat list
     const userData = await prisma.user.findUnique({
       where: {
-        id: parseInt(req.user.id),
+        id: req.user.id,
+      },
+      omit: {
+        email: true,
+        password: true,
       },
       include: {
         Chat: true,
         friends: {
-          omit: {
-            password: true,
-            email: true,
+          where: {
+            status: "ACCEPTED",
+          },
+          include: {
+            user: {
+              omit: {
+                password: true,
+                email: true,
+              },
+            },
           },
         },
         friendOf: {
-          omit: {
-            password: true,
-            email: true,
+          where: { status: "ACCEPTED" },
+          include: {
+            user: {
+              omit: {
+                password: true,
+                email: true,
+              },
+            },
           },
         },
       },

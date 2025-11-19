@@ -4,6 +4,33 @@ const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 const protectedRoute = require("../auth/auth");
 
+userRouter.get("/friend/:username", async (req, res) => {
+  // looks up an individual user
+  try {
+    const friend = await prisma.user.findUnique({
+      select: {
+        username: true,
+        id: true,
+        profile_img_url: true,
+        acct_status: true,
+        last_activity: true,
+      },
+      where: {
+        username: req.params.username,
+      },
+    });
+    if (!friend) {
+      throw new Error("User not found");
+    }
+    if (friend.acct_status === "DEACTIVATED") {
+      throw new Error("That acct has been deactivated");
+    }
+    return res.json(friend);
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
+  }
+});
 userRouter.get("/friend", protectedRoute, async (req, res) => {
   try {
     // requests all of user's friends
@@ -34,7 +61,7 @@ userRouter.get("/friend", protectedRoute, async (req, res) => {
 });
 userRouter.post("/friend", protectedRoute, async (req, res) => {
   try {
-    // TODO - adds a new friendship between user and requested friend
+    // adds a new friendship between user and requested friend
     const friendship = await prisma.friendship.create({
       data: {
         user_id: req.user.id,
