@@ -16,36 +16,40 @@ index.get("/", protectedRoute, async (req, res) => {
       where: {
         id: req.user.id,
       },
-      omit: {
-        email: true,
-        password: true,
-      },
-      include: {
-        Chat: true,
+      select: {
+        id: true,
+        username: true,
+        profile_img_url: true,
+        joined_date: true,
+        last_activity: true,
+        acct_status: true,
         friends: {
           where: {
             status: "ACCEPTED",
           },
-          include: {
-            user: {
+          select: {
+            friend: {
               omit: {
-                password: true,
                 email: true,
+                password: true,
               },
             },
           },
         },
         friendOf: {
-          where: { status: "ACCEPTED" },
-          include: {
+          where: {
+            status: "ACCEPTED",
+          },
+          select: {
             user: {
               omit: {
-                password: true,
                 email: true,
+                password: true,
               },
             },
           },
         },
+        Chat: true,
       },
     });
     return res.json(userData);

@@ -14,16 +14,15 @@ export default function FriendList({ friends, user }) {
       </button>
       {friendRequest && <FriendRequestForm />}
       <ul>
-        {/* Friends List */}
-        {!friends && <h3>You have no friends!</h3>}
         {friends &&
           friends.length > 0 &&
           friends.map((friend) => (
-            <li>
+            <li key={friend.id}>
               <FriendCard friend={friend} />
             </li>
           ))}
       </ul>
+      {!friends && <h3 key={"NoFriends"}>You have no friends!</h3>}
       {user && <UserUI user={user} />}
     </section>
   );

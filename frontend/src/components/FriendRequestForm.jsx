@@ -5,7 +5,6 @@ export default function FriendRequestForm() {
   const [requested, setRequested] = useState(true);
   const [user, setUser] = useState(null);
   const [lookupList, setLookupList] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const request = setTimeout(() => {
@@ -28,18 +27,19 @@ export default function FriendRequestForm() {
   async function sendFriendRequest(e) {
     e.preventDefault();
     setRequested(true);
-    const token = localStorage.getItem("token");
+    const token = JSON.parse(localStorage.getItem("token"));
     if (token) {
       const request = await fetch(
         `${import.meta.env.VITE_API_URL}/user/friend`,
         {
           method: "POST",
           headers: {
-            Authorization: token,
+            "Authorization": token,
+            "Content-Type": "application/json",
           },
-          body: {
-            friendId: user.id,
-          },
+          body: JSON.stringify({
+            friendId: lookupList.id,
+          }),
         }
       );
     }
@@ -64,7 +64,6 @@ export default function FriendRequestForm() {
       {lookupList && (
         <div
           onClick={() => {
-            setSelectedUser(lookupList);
             setRequested(false);
           }}
         >

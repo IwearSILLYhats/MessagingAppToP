@@ -23,7 +23,21 @@ function App() {
           Authorization: token,
         },
       });
-      const response = await request.text();
+      const response = await request.json();
+      if (response.friends || response.friendsOf) {
+        let friendsList = [...response.friends, ...response.friendOf]
+          .sort((a, b) => {
+            return a - b;
+          })
+          .map((friend) => friend.friend);
+        if (friendsList.length > 0) setFriends(friendsList);
+      }
+      if (request.Chat && request.Chat.length > 0) {
+        setChat(request.Chat);
+      }
+      if (request.user) {
+        setUser(request.user);
+      }
     }
     fetchDashboard();
   }, [token]);
