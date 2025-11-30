@@ -50,6 +50,7 @@ index.get("/", protectedRoute, async (req, res) => {
           },
         },
         Chat: true,
+        owned_chats: true,
       },
     });
     return res.json(userData);

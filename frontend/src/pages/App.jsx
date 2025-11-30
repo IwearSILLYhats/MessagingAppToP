@@ -32,11 +32,15 @@ function App() {
           .map((friend) => friend.friend);
         if (friendsList.length > 0) setFriends(friendsList);
       }
-      if (request.Chat && request.Chat.length > 0) {
-        setChat(request.Chat);
+      if (
+        (response.Chat && response.Chat.length > 0) ||
+        (response.owned_chats && response.owned_chats.length > 0)
+      ) {
+        let chatList = [...response.Chat, ...response.owned_chats];
+        setConversations(chatList);
       }
-      if (request.user) {
-        setUser(request.user);
+      if (response.user) {
+        setUser(response.user);
       }
     }
     fetchDashboard();
@@ -46,7 +50,11 @@ function App() {
     <>
       {token && (
         <>
-          <Conversations conversations={conversations} setChat={setChat} />
+          <Conversations
+            conversations={conversations}
+            friends={friends}
+            setChat={setChat}
+          />
           <Chat chat={chat} />
           <FriendList user={user} friends={friends} logout={setToken} />
         </>

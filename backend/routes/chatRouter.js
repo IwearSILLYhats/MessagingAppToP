@@ -18,13 +18,17 @@ chatRouter.get("/", protectedRoute, async (req, res) => {
 chatRouter.post("/", protectedRoute, async (req, res) => {
   // create new chat
   try {
-    const { title, img_url, type } = req.body;
+    const { title, img_url, users } = req.body;
+    const type = users.length > 1 ? "GROUP" : "DIRECT";
     const newChat = await prisma.chat.create({
       data: {
         user_id: req.user.id,
         title: title,
         img_url: img_url,
         type: type,
+        users: {
+          connect: users.map((id) => ({ id })),
+        },
       },
     });
     if (newChat) {

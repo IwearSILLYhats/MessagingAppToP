@@ -1,10 +1,14 @@
 import { useState, useMemo } from "react";
 import ChatCard from "./ChatCard";
+import ConversationForm from "./ConversationForm";
 
-export default function Conversations({ conversations }) {
+export default function Conversations({ conversations, friends, setChat }) {
   const [chatToggle, setChatToggle] = useState(false);
+  const [chatForm, setChatForm] = useState(false);
   function drawerToggle() {}
-  function newChat() {}
+  function newChat() {
+    setChatForm(!chatForm);
+  }
   function filterChats(chats) {
     let direct = [];
     let group = [];
@@ -18,9 +22,18 @@ export default function Conversations({ conversations }) {
       <button onClick={() => drawerToggle()}>|||</button>
       <button onClick={() => newChat()}>New Chat</button>
       <button onClick={() => toggleChat()}>Group/DM Toggle</button>
+      {chatForm && <ConversationForm friends={friends} />}
       <ul>
         {!conversations && <h3>You don't have any conversations!</h3>}
-        {conversations && <ChatCard openChat={openChat} />}
+        {conversations &&
+          conversations.length > 0 &&
+          conversations.map((conversation) => (
+            <ChatCard
+              chat={conversation}
+              openChat={openChat}
+              key={conversation.id}
+            />
+          ))}
       </ul>
     </section>
   );
