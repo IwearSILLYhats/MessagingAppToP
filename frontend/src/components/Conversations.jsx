@@ -1,9 +1,17 @@
+import { useState, useMemo } from "react";
 import ChatCard from "./ChatCard";
 
 export default function Conversations({ conversations }) {
+  const [chatToggle, setChatToggle] = useState(false);
   function drawerToggle() {}
   function newChat() {}
-  function toggleChat() {}
+  function filterChats(chats) {
+    let direct = [];
+    let group = [];
+  }
+  function toggleChat() {
+    setChatToggle(!chatToggle);
+  }
   function openChat() {}
   return (
     <section className="conversations">

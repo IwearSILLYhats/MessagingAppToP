@@ -3,6 +3,8 @@
   height: 100%;
   display: flex;
   flex-direction: row;
+  padding: 0;
+  margin: 0;
 }
 .card {
   padding: 2em;
@@ -11,14 +13,38 @@
 .chat,
 .friends {
   height: 100%;
-  padding: 0.25rem;
+  padding: 0.5rem;
   border: 1px solid white;
   flex-grow: 1;
 }
 .profileImg {
-  max-width: 1rem;
-  max-height: 1rem;
+  max-width: 2rem;
+  max-height: 2rem;
 }
 ul {
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  padding: 0;
+  gap: 0.5rem;
+}
+.friendCard {
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 0 1px grey;
+}
+.onlineStatus {
+  border-radius: 50%;
+  min-width: 0.5rem;
+  min-height: 0.5rem;
+  position: absolute;
+  bottom: 30%;
+  right: 15%;
+}
+.statusCard {
+  height: 100%;
+  position: relative;
+  margin: 0;
+  padding: 0;
 }

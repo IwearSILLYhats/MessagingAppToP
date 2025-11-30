@@ -1,8 +1,11 @@
+import defaultPerson from "../assets/defaultPerson.svg";
+import UserStatus from "./UserStatus";
+
 export default function FriendCard({ friend }) {
   function friendStatus() {
-    const lastActive = new Date(friend.last_activity);
+    const lastActive = new Date(friend.last_activity).getTime();
     const now = Date.now();
-    const timeDiff = now - lastActive.getTime();
+    const timeDiff = now - lastActive;
     const seconds = Math.floor(timeDiff / 1000);
     if (seconds < 60) return `${seconds}s ago`;
     const minutes = Math.floor(seconds / 60);
@@ -14,14 +17,7 @@ export default function FriendCard({ friend }) {
   }
   return (
     <div className="friendCard">
-      <img
-        className="profileImg"
-        src={
-          friend.profile_img_url ||
-          "https://www.svgrepo.com/show/529487/chat-round.svg"
-        }
-        alt=""
-      />
+      <UserStatus user={friend} />
       <p>
         {friend.username} - Last Online {friendStatus()}
       </p>

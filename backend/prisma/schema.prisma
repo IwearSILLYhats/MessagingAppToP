@@ -25,11 +25,12 @@ model User {
   acct_status     acct_status @default(ACTIVE)
 
   // Represents friendships where this user is the 'initiator'
-  friends  Friendship[] @relation("UserFriends")
+  friends     Friendship[] @relation("UserFriends")
   // Represents friendships where this user is the 'recipient'
-  friendOf Friendship[] @relation("FriendOfUser")
-  Chat     Chat[]
-  Message  Message[]
+  friendOf    Friendship[] @relation("FriendOfUser")
+  Chat        Chat[]
+  Message     Message[]
+  owned_chats Chat[]       @relation("ChatOwner")
 }
 
 model Friendship {
@@ -46,12 +47,14 @@ model Friendship {
 
 model Chat {
   id           String    @id @default(uuid())
+  owner        User      @relation("ChatOwner", fields: [user_id], references: [id])
   title        String
   users        User[]
   messages     Message[]
   img_url      String?
   last_message DateTime  @default(now())
   type         chat_type
+  user_id      String
 }
 
 model Message {
