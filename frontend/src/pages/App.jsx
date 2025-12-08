@@ -39,8 +39,9 @@ function App() {
         let chatList = [...response.Chat, ...response.owned_chats];
         setConversations(chatList);
       }
-      if (response.user) {
-        setUser(response.user);
+      if (response.id) {
+        const { friends, friendOf, Chat, owned_chats, ...rest } = response;
+        setUser(rest);
       }
     }
     fetchDashboard();

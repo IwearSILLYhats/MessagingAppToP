@@ -9,19 +9,13 @@ export default function Conversations({ conversations, friends, setChat }) {
   function newChat() {
     setChatForm(!chatForm);
   }
-  function filterChats(chats) {
-    let direct = [];
-    let group = [];
-  }
   function toggleChat() {
     setChatToggle(!chatToggle);
   }
-  function openChat() {}
   return (
     <section className="conversations">
       <button onClick={() => drawerToggle()}>|||</button>
       <button onClick={() => newChat()}>New Chat</button>
-      <button onClick={() => toggleChat()}>Group/DM Toggle</button>
       {chatForm && <ConversationForm friends={friends} />}
       <ul>
         {!conversations && <h3>You don't have any conversations!</h3>}
@@ -30,7 +24,7 @@ export default function Conversations({ conversations, friends, setChat }) {
           conversations.map((conversation) => (
             <ChatCard
               chat={conversation}
-              openChat={openChat}
+              openChat={setChat}
               key={conversation.id}
             />
           ))}

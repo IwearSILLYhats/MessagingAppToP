@@ -18,7 +18,7 @@ export default function UserStatus({ user }) {
       <img
         src={user.profile_img_url || defaultPerson}
         alt={user.username}
-        className="profileImg"
+        className="cardImg"
       />
       <span
         className="onlineStatus"

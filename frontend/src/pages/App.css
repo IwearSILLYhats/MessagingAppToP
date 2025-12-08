@@ -17,7 +17,16 @@
   border: 1px solid white;
   flex-grow: 1;
 }
-.profileImg {
+.conversations {
+  max-width: 20rem;
+}
+.friends {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 20rem;
+}
+.cardImg {
   max-width: 2rem;
   max-height: 2rem;
 }
@@ -29,10 +38,19 @@ ul {
   padding: 0;
   gap: 0.5rem;
 }
-.friendCard {
+.friendCard,
+.userCard,
+.chatCard {
   display: flex;
   align-items: center;
   box-shadow: 0 0 0 1px grey;
+}
+.chatCard img {
+  margin: 0 0.5rem;
+}
+.userCard {
+  display: flex;
+  justify-content: space-between;
 }
 .onlineStatus {
   border-radius: 50%;
@@ -42,9 +60,17 @@ ul {
   bottom: 30%;
   right: 15%;
 }
+.userStatus {
+  display: flex;
+  align-items: center;
+}
 .statusCard {
-  height: 100%;
+  height: fit-content;
   position: relative;
-  margin: 0;
-  padding: 0;
+  margin-right: 0.5rem;
+}
+.logout {
+  padding: 0 0.5rem;
+  margin: 0 0.5rem;
+  justify-self: end;
 }

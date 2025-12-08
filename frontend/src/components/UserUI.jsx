@@ -4,11 +4,14 @@ import UserStatus from "./UserStatus";
 export default function UserUI({ user }) {
   const [token, setToken] = useLocalStorage("token", null);
   return (
-    <div>
-      <UserStatus user={user} />
-      <p>{user.username}</p>
-      <span>Online Status</span>
-      <button onClick={() => setToken(null)}>Logout</button>
+    <div className="userCard">
+      <div className="userStatus">
+        <UserStatus user={user} />
+        <p>{user.username}</p>
+      </div>
+      <button onClick={() => setToken(null)} className="logout">
+        Logout
+      </button>
     </div>
   );
 }
