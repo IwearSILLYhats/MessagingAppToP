@@ -49,8 +49,52 @@ index.get("/", protectedRoute, async (req, res) => {
             },
           },
         },
-        Chat: true,
-        owned_chats: true,
+        Chat: {
+          select: {
+            id: true,
+            title: true,
+            img_url: true,
+            last_message: true,
+            type: true,
+            owner: {
+              select: {
+                id: true,
+                profile_img_url: true,
+                username: true,
+              },
+            },
+            users: {
+              select: {
+                id: true,
+                profile_img_url: true,
+                username: true,
+              },
+            },
+          },
+        },
+        owned_chats: {
+          select: {
+            id: true,
+            title: true,
+            img_url: true,
+            last_message: true,
+            type: true,
+            users: {
+              select: {
+                id: true,
+                profile_img_url: true,
+                username: true,
+              },
+            },
+            owner: {
+              select: {
+                id: true,
+                profile_img_url: true,
+                username: true,
+              },
+            },
+          },
+        },
       },
     });
     return res.json(userData);
@@ -117,7 +161,6 @@ index.post("/login", async (req, res) => {
 });
 
 index.use("/chat", chatRouter);
-index.use("/message", messageRouter);
 index.use("/user", userRouter);
 
 module.exports = index;

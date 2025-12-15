@@ -17,16 +17,18 @@
   border: 1px solid white;
   flex-grow: 1;
 }
-.conversations {
+.conversations,
+.friends {
   max-width: 20rem;
 }
-.friends {
+.friends,
+.chat {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  max-width: 20rem;
 }
-.cardImg {
+.cardImg,
+.chatImg {
   max-width: 2rem;
   max-height: 2rem;
 }
@@ -73,4 +75,49 @@ ul {
   padding: 0 0.5rem;
   margin: 0 0.5rem;
   justify-self: end;
+}
+.chat {
+  padding: 0;
+}
+.messageForm {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+.messageForm > div {
+  position: relative;
+}
+.messageForm img {
+  max-width: 1rem;
+  max-height: 100%;
+  margin: 0;
+}
+.messageForm button {
+  max-height: 100%;
+  max-width: 2rem;
+  padding: 0 0.5rem;
+  border-radius: 0;
+}
+#addImageButton {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+}
+#messageSubmit {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+}
+.messageForm input,
+#content {
+  width: 100%;
+  padding: 0 2rem;
+}
+#content {
+  margin: 0;
+  field-sizing: content;
+  min-height: 3rem;
+  max-height: 20vh;
+  resize: none;
+  overflow: hidden;
 }

@@ -55,6 +55,7 @@ function App() {
             conversations={conversations}
             friends={friends}
             setChat={setChat}
+            user={user}
           />
           <Chat chat={chat} />
           <FriendList user={user} friends={friends} logout={setToken} />

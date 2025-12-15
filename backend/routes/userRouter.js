@@ -62,10 +62,37 @@ userRouter.get("/friend", protectedRoute, async (req, res) => {
 userRouter.post("/friend", protectedRoute, async (req, res) => {
   try {
     // adds a new friendship between user and requested friend
+    const friendCheck = await prisma.friendship.findFirst({
+      where: {
+        OR: [
+          {
+            user_id: req.user.id,
+            friend_id: req.body.friendId,
+          },
+          {
+            user_id: req.body.friendId,
+            friend_id: req.user.id,
+          },
+        ],
+      },
+    });
+    if (friendCheck) {
+      throw new Error("Friendship already exists");
+    }
     const friendship = await prisma.friendship.create({
       data: {
-        user_id: req.user.id,
-        friend_id: req.body.friendId,
+        user: { connect: { id: req.user.id } },
+        friend: { connect: { id: req.body.friendId } },
+        friendChat: {
+          create: {
+            title: "Direct Message",
+            type: "DIRECT",
+            user_id: req.user.id,
+            users: {
+              connect: { id: req.body.friendId },
+            },
+          },
+        },
       },
     });
     return res.json({ error: null, success: "Friend request sent!" });

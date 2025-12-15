@@ -35,26 +35,29 @@ model User {
 
 model Friendship {
   id         String        @id @default(uuid())
+  friendChat Chat?         @relation(fields: [chatId], references: [id])
   user       User          @relation("UserFriends", fields: [user_id], references: [id])
   user_id    String
   friend     User          @relation("FriendOfUser", fields: [friend_id], references: [id])
   friend_id  String
-  status     friend_status @default(PENDING) // e.g., PENDING, ACCEPTED, BLOCKED
+  status     friend_status @default(ONE_PENDING_TWO) // e.g., PENDING, ACCEPTED, BLOCKED
   created_at DateTime      @default(now())
+  chatId     String
 
   @@unique([user_id, friend_id]) // Ensures unique friendship records
 }
 
 model Chat {
-  id           String    @id @default(uuid())
-  owner        User      @relation("ChatOwner", fields: [user_id], references: [id])
+  id           String       @id @default(uuid())
+  owner        User         @relation("ChatOwner", fields: [user_id], references: [id])
   title        String
   users        User[]
   messages     Message[]
   img_url      String?
-  last_message DateTime  @default(now())
+  last_message DateTime     @default(now())
   type         chat_type
   user_id      String
+  friendships  Friendship[]
 }
 
 model Message {
@@ -69,9 +72,14 @@ model Message {
 }
 
 enum friend_status {
-  PENDING
+  // one is initiator and two is recipient
+  ONE_PENDING_TWO
+  TWO_PENDING_ONE
+  DENIED
   ACCEPTED
   BLOCKED
+  ONE_BLOCKED_TWO
+  TWO_BLOCKED_ONE
 }
 
 enum acct_status {

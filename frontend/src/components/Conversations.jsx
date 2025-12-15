@@ -2,15 +2,16 @@ import { useState, useMemo } from "react";
 import ChatCard from "./ChatCard";
 import ConversationForm from "./ConversationForm";
 
-export default function Conversations({ conversations, friends, setChat }) {
-  const [chatToggle, setChatToggle] = useState(false);
+export default function Conversations({
+  conversations,
+  friends,
+  setChat,
+  user,
+}) {
   const [chatForm, setChatForm] = useState(false);
   function drawerToggle() {}
   function newChat() {
     setChatForm(!chatForm);
-  }
-  function toggleChat() {
-    setChatToggle(!chatToggle);
   }
   return (
     <section className="conversations">
@@ -26,6 +27,7 @@ export default function Conversations({ conversations, friends, setChat }) {
               chat={conversation}
               openChat={setChat}
               key={conversation.id}
+              user={user}
             />
           ))}
       </ul>

@@ -4,9 +4,7 @@ form {
   gap: 1rem;
   border: 1px solid rgba(155, 155, 155, 25%);
   padding: 1rem;
-  border-radius: 10px;
 }
 input {
-  border-radius: 15px;
   padding: 0.25rem 1rem;
 }
