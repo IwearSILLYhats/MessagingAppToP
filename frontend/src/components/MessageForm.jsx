@@ -1,13 +1,13 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import submitImg from "../assets/submitImg.svg";
 
-export default function MessageForm({}) {
+export default function MessageForm({ chat }) {
   async function handleSubmit(event) {
     event.preventDefault(event);
     const token = JSON.parse(localStorage.getItem("token"));
-    if (token) {
+    if (token && content.length > 0) {
       const request = await fetch(
-        `${import.meta.env.VITE_API_URL}/user/friend`,
+        `${import.meta.env.VITE_API_URL}/chat/${chat}/message`,
         {
           method: "POST",
           headers: {
@@ -15,13 +15,15 @@ export default function MessageForm({}) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            friendId: lookupList.id,
+            content: content,
+            imageUrl: imageUrl,
           }),
         }
       );
     }
   }
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageField, setImageField] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
   const [content, setContent] = useState("");
   const contentRef = useRef(null);
   useLayoutEffect(() => {
@@ -40,14 +42,24 @@ export default function MessageForm({}) {
       onSubmit={(e) => handleSubmit(e)}
       className="messageForm"
     >
-      <input
-        type="text"
-        name="image_url"
-        id="image_url"
-        placeholder="Image Url"
-      />
+      {imageField && (
+        <input
+          type="text"
+          name="image_url"
+          id="image_url"
+          placeholder="Image Url"
+          onChange={(e) => setImageUrl(e.target.value)}
+        />
+      )}
       <div>
-        <button id="addImageButton">+</button>
+        <button
+          id="addImageButton"
+          onClick={() => setImageField(!imageField)}
+          key={"addImg"}
+          type="button"
+        >
+          +
+        </button>
         <textarea
           name="content"
           id="content"
@@ -56,7 +68,7 @@ export default function MessageForm({}) {
           value={content}
           onChange={(e) => setContent(e.target.value)}
         ></textarea>
-        <button id="messageSubmit">
+        <button id="messageSubmit" type="submit" key={"submit"}>
           <img src={submitImg} alt="submit message" />
         </button>
       </div>

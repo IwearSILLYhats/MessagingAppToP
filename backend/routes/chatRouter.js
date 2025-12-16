@@ -5,6 +5,8 @@ const prisma = new PrismaClient();
 const protectedRoute = require("../auth/auth");
 const messageRouter = require("./messageRouter");
 
+chatRouter.use("/:chatid/message", messageRouter);
+
 chatRouter.get("/:id", protectedRoute, async (req, res) => {
   try {
     //requests chat info and messages
@@ -91,5 +93,5 @@ chatRouter.post("/", protectedRoute, async (req, res) => {
     return res.json(error);
   }
 });
-chatRouter.use("/:chatid/message", messageRouter);
+
 module.exports = chatRouter;

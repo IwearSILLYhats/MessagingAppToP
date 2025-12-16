@@ -56,7 +56,7 @@ export default function Chat({ chat }) {
       )}
       <div>
         {messages && <MessageList messages={messages} />}
-        <MessageForm />
+        <MessageForm chat={chat} />
       </div>
     </main>
   );
