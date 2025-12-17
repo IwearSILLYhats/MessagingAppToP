@@ -44,7 +44,7 @@ model Friendship {
   created_at DateTime      @default(now())
   chatId     String
 
-  @@unique([user_id, friend_id]) // Ensures unique friendship records
+  @@unique([user_id, friend_id])
 }
 
 model Chat {

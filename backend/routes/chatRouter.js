@@ -19,7 +19,14 @@ chatRouter.get("/:id", protectedRoute, async (req, res) => {
         title: true,
         img_url: true,
         type: true,
-        friendships: true,
+        friendships: {
+          select: {
+            id: true,
+            user_id: true,
+            friend_id: true,
+            status: true,
+          },
+        },
         owner: {
           select: {
             id: true,

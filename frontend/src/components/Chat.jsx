@@ -31,6 +31,20 @@ export default function Chat({ chat }) {
       fetchMessages();
     }
   }, [chat]);
+  function checkChatStatus() {
+    if (
+      activeChat.type === "DIRECT" &&
+      activeChat.friendships[0].status !== "ACCEPTED"
+    ) {
+      return (
+        <FriendshipUI
+          friendship={activeChat.friendships[0]}
+          activeuser={activeChat.user}
+        />
+      );
+    }
+    return <MessageForm chat={activeChat} />;
+  }
 
   function setTitle() {
     if (activeChat.type === "DIRECT") {
@@ -56,7 +70,16 @@ export default function Chat({ chat }) {
       )}
       <div>
         {messages && <MessageList messages={messages} />}
-        {(activeChat && activeChat.type === "DIRECT" && activeChat.friendships[0].status !== "ACCEPTED") ? <FriendshipUI friendship={activeChat.friendships[0]} user={activeChat.user}/> : <MessageForm chat={activeChat} />}
+        {activeChat &&
+        activeChat.type === "DIRECT" &&
+        activeChat.friendships[0].status !== "ACCEPTED" ? (
+          <FriendshipUI
+            friendship={activeChat.friendships[0]}
+            user={activeChat.user}
+          />
+        ) : (
+          <MessageForm chat={activeChat} />
+        )}
       </div>
     </main>
   );
