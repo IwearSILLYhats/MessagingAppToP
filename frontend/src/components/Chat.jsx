@@ -3,7 +3,7 @@ import MessageList from "./MessageList";
 import MessageForm from "./MessageForm";
 import { useEffect } from "react";
 import defaultChat from "../assets/defaultchat.svg";
-import ChatCard from "./ChatCard";
+import FriendshipUI from "./FriendshipUI";
 
 export default function Chat({ chat }) {
   const [activeChat, setActiveChat] = useState(null);
@@ -56,7 +56,7 @@ export default function Chat({ chat }) {
       )}
       <div>
         {messages && <MessageList messages={messages} />}
-        <MessageForm chat={chat} />
+        {(activeChat && activeChat.type === "DIRECT" && activeChat.friendships[0].status !== "ACCEPTED") ? <FriendshipUI friendship={activeChat.friendships[0]} user={activeChat.user}/> : <MessageForm chat={activeChat} />}
       </div>
     </main>
   );
