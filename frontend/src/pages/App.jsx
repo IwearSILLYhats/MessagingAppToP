@@ -29,7 +29,7 @@ function App() {
           .sort((a, b) => {
             return a - b;
           })
-          .map((friend) => friend.friend);
+          .map((friend) => (friend.friend ? friend.friend : friend.user));
         if (friendsList.length > 0) setFriends(friendsList);
       }
       if (

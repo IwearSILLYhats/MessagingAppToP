@@ -44,12 +44,14 @@ export default function Login() {
           name="email"
           id="email"
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email@example.com"
         />
         <input
           type="password"
           name="password"
           id="password"
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="******"
         />
         <Alert type={error || success} message={error || success} />
         <button type="submit">Login</button>

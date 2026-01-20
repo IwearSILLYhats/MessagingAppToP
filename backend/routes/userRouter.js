@@ -154,9 +154,9 @@ userRouter.patch(
   async (req, res) => {
     // TODO - updates existing friendship status
     try {
-      const friendship = await prisma.findUnique({
+      const friendship = await prisma.friendship.findUnique({
         where: {
-          id: parseInt(req.params.friendship),
+          id: req.params.friendship,
         },
       });
       if (!friendship) {
@@ -174,7 +174,7 @@ userRouter.patch(
       if (
         action === "accept" &&
         friendship.blocked_by === null &&
-        userRole === true
+        userRole === false
       ) {
         await prisma.friendship.update({
           where: {
@@ -191,7 +191,7 @@ userRouter.patch(
             },
           },
         });
-        return res.json("Friend request accepted");
+        return res.json({ message: "Friend request accepted" });
       } else if (action === "cancel" && friendship.blocked_by === null) {
         await prisma.friendship.delete({
           where: {
@@ -207,8 +207,8 @@ userRouter.patch(
             },
           },
         });
-        return res.json("Friendship successfully deleted");
-      } else if (action === "block" && blocked_by === null) {
+        return res.json({ message: "Friendship successfully deleted" });
+      } else if (action === "block" && friendship.blocked_by === null) {
         await prisma.friendship.update({
           where: {
             id: friendship.id,
@@ -226,7 +226,10 @@ userRouter.patch(
           },
         });
         return res.json("User successfully blocked");
-      } else if (action === "unblock" && blocked_by === req.user.id) {
+      } else if (
+        action === "unblock" &&
+        friendship.blocked_by === req.user.id
+      ) {
         await prisma.friendship.update({
           where: {
             id: friendship.id,

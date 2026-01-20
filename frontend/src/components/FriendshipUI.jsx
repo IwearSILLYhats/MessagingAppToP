@@ -19,10 +19,10 @@ export default function FriendshipUI({ friendship, user }) {
       );
     } else if (friendship.blocked_by !== null) {
       setRelationshipStatus(
-        userSender === friendship.blocked_by
+        user === friendship.blocked_by
           ? {
               message: "You have blocked this user",
-              actions: ["Unblock"],
+              actions: ["UNBLOCK"],
             }
           : {
               message: "User has blocked you",
@@ -39,7 +39,7 @@ export default function FriendshipUI({ friendship, user }) {
           <button
             type="button"
             onClick={() =>
-              apiFetch(`friend`, {
+              apiFetch(`user/friend`, {
                 method: "POST",
                 body: {
                   friendId: userSender ? friendship.friend_id : user,
@@ -55,7 +55,7 @@ export default function FriendshipUI({ friendship, user }) {
           <button
             type="button"
             onClick={() => {
-              apiFetch(`friend/${friendship.id}/cancel`, {
+              apiFetch(`user/friend/${friendship.id}/cancel`, {
                 method: "PATCH",
               });
             }}
@@ -68,7 +68,7 @@ export default function FriendshipUI({ friendship, user }) {
           <button
             type="button"
             onClick={() => {
-              apiFetch(`friend/${friendship.id}/cancel`, {
+              apiFetch(`user/friend/${friendship.id}/cancel`, {
                 method: "PATCH",
               });
             }}
@@ -81,7 +81,7 @@ export default function FriendshipUI({ friendship, user }) {
           <button
             type="button"
             onClick={() => {
-              apiFetch(`friend/${friendship.id}/accept`, {
+              apiFetch(`user/friend/${friendship.id}/accept`, {
                 method: "PATCH",
               });
             }}
@@ -94,7 +94,7 @@ export default function FriendshipUI({ friendship, user }) {
           <button
             type="button"
             onClick={() => {
-              apiFetch(`friend/${friendship.id}/block`, {
+              apiFetch(`user/friend/${friendship.id}/block`, {
                 method: "PATCH",
               });
             }}
@@ -107,7 +107,7 @@ export default function FriendshipUI({ friendship, user }) {
           <button
             type="button"
             onClick={() => {
-              apiFetch(`friend/${friendship.id}/unblock`, {
+              apiFetch(`user/friend/${friendship.id}/unblock`, {
                 method: "PATCH",
               });
             }}
