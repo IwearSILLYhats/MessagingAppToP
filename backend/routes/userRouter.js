@@ -62,47 +62,194 @@ userRouter.get("/friend", protectedRoute, async (req, res) => {
 userRouter.post("/friend", protectedRoute, async (req, res) => {
   try {
     // adds a new friendship between user and requested friend
-    const friendCheck = await prisma.friendship.findFirst({
-      where: {
-        OR: [
-          {
-            user_id: req.user.id,
-            friend_id: req.body.friendId,
-          },
-          {
-            user_id: req.body.friendId,
-            friend_id: req.user.id,
-          },
-        ],
-      },
-    });
-    if (friendCheck) {
-      throw new Error("Friendship already exists");
+
+    const [relationship, directMessage] = await Promise.all([
+      prisma.friendship.findFirst({
+        where: {
+          OR: [
+            {
+              user_id: req.user.id,
+              friend_id: req.body.friendId,
+            },
+            {
+              user_id: req.body.friendId,
+              friend_id: req.user.id,
+            },
+          ],
+        },
+        include: {
+          friendChat: true,
+        },
+      }),
+      prisma.chat.findFirst({
+        where: {
+          OR: [
+            {
+              user_id: req.user.id,
+              users: {
+                some: {
+                  id: req.body.friendId,
+                },
+              },
+            },
+            {
+              user_id: req.user.id,
+              users: {
+                some: {
+                  id: req.body.friendId,
+                },
+              },
+            },
+          ],
+          type: "DIRECT",
+        },
+      }),
+    ]);
+    if (
+      relationship &&
+      relationship.user_id !== req.user.id &&
+      relationship.friend_id !== req.user.id
+    ) {
+      throw new Error("User not authorized");
     }
-    const friendship = await prisma.friendship.create({
-      data: {
-        user: { connect: { id: req.user.id } },
-        friend: { connect: { id: req.body.friendId } },
-        friendChat: {
-          create: {
-            title: "Direct Message",
-            type: "DIRECT",
-            user_id: req.user.id,
-            users: {
-              connect: { id: req.body.friendId },
+    if (relationship) {
+      return res.json({ message: "Relationship already exists" });
+    }
+    let friendship;
+    if (directMessage) {
+      friendship = await prisma.friendship.create({
+        data: {
+          user: { connect: { id: req.user.id } },
+          friend: { connect: { id: req.body.friendId } },
+          friendChat: { connect: { id: directMessage.id } },
+        },
+      });
+    } else {
+      friendship = await prisma.friendship.create({
+        data: {
+          user: { connect: { id: req.user.id } },
+          friend: { connect: { id: req.body.friendId } },
+          friendChat: {
+            create: {
+              title: "Direct Message",
+              type: "DIRECT",
+              user_id: req.user.id,
+              users: {
+                connect: { id: req.body.friendId },
+              },
             },
           },
         },
-      },
-    });
+      });
+    }
     return res.json({ error: null, success: "Friend request sent!" });
   } catch (error) {
     console.log(error);
     return res.json(error);
   }
 });
-userRouter.put("/friend", protectedRoute, (req, res) => {
-  // TODO - updates existing friendship status
-});
+userRouter.patch(
+  "/friend/:friendship/:action",
+  protectedRoute,
+  async (req, res) => {
+    // TODO - updates existing friendship status
+    try {
+      const friendship = await prisma.findUnique({
+        where: {
+          id: parseInt(req.params.friendship),
+        },
+      });
+      if (!friendship) {
+        throw new Error("Relationship not found");
+      }
+      if (
+        friendship.user_id !== req.user.id &&
+        friendship.friend_id !== req.user.id
+      ) {
+        throw new Error("User not authorized");
+      }
+      // check if user was initiator or recipient of original request
+      const userRole = req.user.id === friendship.user_id;
+      const action = req.params.action;
+      if (
+        action === "accept" &&
+        friendship.blocked_by === null &&
+        userRole === true
+      ) {
+        await prisma.friendship.update({
+          where: {
+            id: friendship.id,
+          },
+          data: {
+            status: "ACCEPTED",
+            friendChat: {
+              update: {
+                data: {
+                  last_message: new Date(),
+                },
+              },
+            },
+          },
+        });
+        return res.json("Friend request accepted");
+      } else if (action === "cancel" && friendship.blocked_by === null) {
+        await prisma.friendship.delete({
+          where: {
+            id: friendship.id,
+          },
+          data: {
+            friendChat: {
+              update: {
+                data: {
+                  last_message: new Date(),
+                },
+              },
+            },
+          },
+        });
+        return res.json("Friendship successfully deleted");
+      } else if (action === "block" && blocked_by === null) {
+        await prisma.friendship.update({
+          where: {
+            id: friendship.id,
+          },
+          data: {
+            blocked_by: `${req.user.id}`,
+            status: "PENDING",
+            friendChat: {
+              update: {
+                data: {
+                  last_message: new Date(),
+                },
+              },
+            },
+          },
+        });
+        return res.json("User successfully blocked");
+      } else if (action === "unblock" && blocked_by === req.user.id) {
+        await prisma.friendship.update({
+          where: {
+            id: friendship.id,
+          },
+          data: {
+            blocked_by: null,
+            status: "PENDING",
+            friendChat: {
+              update: {
+                data: {
+                  last_message: new Date(),
+                },
+              },
+            },
+          },
+        });
+        return res.json("User successfully unblocked");
+      }
+    } catch (error) {
+      console.log(error);
+      return res.json(error);
+    }
+  },
+);
 
 module.exports = userRouter;

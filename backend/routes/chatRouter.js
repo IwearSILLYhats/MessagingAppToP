@@ -25,6 +25,7 @@ chatRouter.get("/:id", protectedRoute, async (req, res) => {
             user_id: true,
             friend_id: true,
             status: true,
+            blocked_by: true,
           },
         },
         owner: {

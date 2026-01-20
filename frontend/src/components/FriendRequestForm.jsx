@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import FriendCard from "./FriendCard";
+import apiFetch from "../util/fetch";
 
 export default function FriendRequestForm() {
   const [requested, setRequested] = useState(true);
@@ -10,12 +11,9 @@ export default function FriendRequestForm() {
     const request = setTimeout(() => {
       if (user === null) return;
       async function friendLookup() {
-        const newFriends = await fetch(
-          `${import.meta.env.VITE_API_URL}/user/friend/${user}`
-        );
-        const response = await newFriends.json();
+        const newFriends = await apiFetch(`user/friend/${user}`);
         if (newFriends) {
-          setLookupList(response);
+          setLookupList(newFriends);
         }
       }
       friendLookup();
@@ -27,22 +25,12 @@ export default function FriendRequestForm() {
   async function sendFriendRequest(e) {
     e.preventDefault();
     setRequested(true);
-    const token = JSON.parse(localStorage.getItem("token"));
-    if (token) {
-      const request = await fetch(
-        `${import.meta.env.VITE_API_URL}/user/friend`,
-        {
-          method: "POST",
-          headers: {
-            "Authorization": token,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            friendId: lookupList.id,
-          }),
-        }
-      );
-    }
+    const request = await apiFetch(`user/friend`, {
+      method: "POST",
+      body: JSON.stringify({
+        friendId: lookupList.id,
+      }),
+    });
   }
   return (
     <form
