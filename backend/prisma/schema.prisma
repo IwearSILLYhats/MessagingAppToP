@@ -40,7 +40,8 @@ model Friendship {
   user_id    String
   friend     User          @relation("FriendOfUser", fields: [friend_id], references: [id])
   friend_id  String
-  status     friend_status @default(ONE_PENDING_TWO) // e.g., PENDING, ACCEPTED, BLOCKED
+  blocked_by String?
+  status     friend_status @default(PENDING)
   created_at DateTime      @default(now())
   chatId     String
 
@@ -73,13 +74,8 @@ model Message {
 
 enum friend_status {
   // one is initiator and two is recipient
-  ONE_PENDING_TWO
-  TWO_PENDING_ONE
-  DENIED
+  PENDING
   ACCEPTED
-  BLOCKED
-  ONE_BLOCKED_TWO
-  TWO_BLOCKED_ONE
 }
 
 enum acct_status {
