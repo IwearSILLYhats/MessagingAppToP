@@ -13,9 +13,21 @@ messageRouter.get("/", protectedRoute, (req, res) => {
   }
 });
 
-messageRouter.post("/", protectedRoute, (req, res) => {
+messageRouter.post("/", protectedRoute, async (req, res) => {
   try {
-    return res.json("Posting a new message");
+    const newMessage = await prisma.message.create({
+      data: {
+        author: {
+          connect: { id: req.user.id },
+        },
+        Chat: {
+          connect: { id: req.chatid },
+        },
+        content: req.body.content,
+        image_url: req.body.imageUrl,
+      },
+    });
+    return res.json({ message: "Successfully posted new message." });
   } catch (error) {
     console.log(error);
     return res.json(error);

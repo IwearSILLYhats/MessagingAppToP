@@ -5,7 +5,14 @@ const prisma = new PrismaClient();
 const protectedRoute = require("../auth/auth");
 const messageRouter = require("./messageRouter");
 
-chatRouter.use("/:chatid/message", messageRouter);
+chatRouter.use(
+  "/:chatid/message",
+  (req, res, next) => {
+    req.chatid = req.params.chatid;
+    next();
+  },
+  messageRouter,
+);
 
 chatRouter.get("/:id", protectedRoute, async (req, res) => {
   try {
@@ -49,6 +56,12 @@ chatRouter.get("/:id", protectedRoute, async (req, res) => {
             image_url: true,
             content: true,
             posted_date: true,
+            author: {
+              select: {
+                username: true,
+                profile_img_url: true,
+              },
+            },
           },
         },
       },

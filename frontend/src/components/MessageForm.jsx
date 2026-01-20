@@ -7,7 +7,7 @@ export default function MessageForm({ chat }) {
     const token = JSON.parse(localStorage.getItem("token"));
     if (token && content.length > 0) {
       const request = await fetch(
-        `${import.meta.env.VITE_API_URL}/chat/${chat}/message`,
+        `${import.meta.env.VITE_API_URL}/chat/${chat.id}/message`,
         {
           method: "POST",
           headers: {
@@ -18,7 +18,7 @@ export default function MessageForm({ chat }) {
             content: content,
             imageUrl: imageUrl,
           }),
-        }
+        },
       );
     }
   }
